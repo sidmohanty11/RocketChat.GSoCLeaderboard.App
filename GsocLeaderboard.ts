@@ -9,7 +9,6 @@ import {
     ISlashCommand,
     SlashCommandContext,
 } from "@rocket.chat/apps-engine/definition/slashcommands";
-import fetch from "cross-fetch";
 
 export class GsocLeaderboard implements ISlashCommand {
     public command: string = "gsoc";
@@ -45,15 +44,18 @@ export class GsocLeaderboard implements ISlashCommand {
 
         if (subcommand) {
             try {
-                await fetch("http://0.0.0.0:8080/api/add", {
-                    method: "POST",
+                const r = await http.post("http://0.0.0.0:8080/api/add", {
                     headers: {
                         Accept: "application/json",
                         "Content-Type": "application/json",
                     },
-                    body: JSON.stringify({ token, username: subcommand }),
+                    data: { token, username: subcommand },
                 });
-                message = `Hi ${sender.username}, you have been successfully added to the GSoC Leaderboard!`;
+                if (r.statusCode === 200) {
+                    message = `Hi ${sender.username}, you have been successfully added to the GSoC Leaderboard!`;
+                } else {
+                    message = `Something went wrong! ${r.statusCode}`;
+                }
             } catch (err) {
                 message = `Error occurred while adding ${err}`;
             }
