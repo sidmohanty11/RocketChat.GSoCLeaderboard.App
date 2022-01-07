@@ -1,0 +1,16 @@
+{
+    "id": "d572d211-0b5f-4b4a-89ee-8ef4690902c5",
+    "version": "0.0.1",
+    "requiredApiVersion": "^1.19.0",
+    "iconFile": "icon.png",
+    "author": {
+        "name": "sidmohanty11",
+        "homepage": "https://github.com/sidmohanty11",
+        "support": "https://github.com/sidmohanty11"
+    },
+    "name": "gsocleaderboard",
+    "nameSlug": "gsocleaderboard",
+    "classFile": "GsocleaderboardApp.ts",
+    "description": "a slash command to add user's github username to GSoC leaderboard",
+    "implements": []
+}
