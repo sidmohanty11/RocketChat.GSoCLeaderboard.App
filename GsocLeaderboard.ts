@@ -27,9 +27,9 @@ export class GsocLeaderboard implements ISlashCommand {
         http: IHttp,
         persis: IPersistence
     ): Promise<void> {
+        let message: string = "";
         const [subcommand] = context.getArguments();
         const room = context.getRoom();
-        let message: string;
         const sender = context.getSender();
 
         if (room.displayName !== "gsoc2022") {
@@ -43,18 +43,20 @@ export class GsocLeaderboard implements ISlashCommand {
         // password of admin
         const token = "sidharth";
 
-        try {
-            await fetch("http://0.0.0.0:8080/api/add", {
-                method: "POST",
-                headers: {
-                    Accept: "application/json",
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ token, username: subcommand }),
-            });
-            message = `Hi ${sender.username}, you have been successfully added to the GSoC Leaderboard!`;
-        } catch (err) {
-            message = `Error occurred while adding ${err}`;
+        if (subcommand) {
+            try {
+                await fetch("http://0.0.0.0:8080/api/add", {
+                    method: "POST",
+                    headers: {
+                        Accept: "application/json",
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ token, username: subcommand }),
+                });
+                message = `Hi ${sender.username}, you have been successfully added to the GSoC Leaderboard!`;
+            } catch (err) {
+                message = `Error occurred while adding ${err}`;
+            }
         }
 
         const messageStructure = modify.getCreator().startMessage();
