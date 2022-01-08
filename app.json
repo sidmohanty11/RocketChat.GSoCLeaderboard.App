@@ -12,5 +12,7 @@
     "nameSlug": "gsocleaderboard",
     "classFile": "GsocleaderboardApp.ts",
     "description": "a slash command to add user's github username to GSoC leaderboard",
-    "implements": []
+    "implements": [
+        "IPostRoomUserJoined"
+    ]
 }
