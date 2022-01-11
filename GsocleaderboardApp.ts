@@ -24,22 +24,36 @@ export class GsocLeaderboardApp extends App implements IPostRoomUserJoined {
         super(info, logger, accessors);
     }
 
+    public async onEnable(
+        environment: IEnvironmentRead,
+        configurationModify: IConfigurationModify
+    ): Promise<boolean> {
+        await environment.getSettings().getValueById("admin-password");
+        await environment.getSettings().getValueById("domain");
+        return true;
+    }
+
     public async onSettingUpdated(
         setting: ISetting,
         configurationModify: IConfigurationModify,
         read: IRead,
         http: IHttp
     ): Promise<void> {
-        const pass = await read
+        await read
             .getEnvironmentReader()
             .getSettings()
             .getValueById("admin-password");
+        await read.getEnvironmentReader().getSettings().getValueById("domain");
     }
 
     protected async extendConfiguration(
         configuration: IConfigurationExtend
     ): Promise<void> {
-        await configuration.settings.provideSetting(settings);
+        await Promise.all(
+            settings.map((setting) =>
+                configuration.settings.provideSetting(setting)
+            )
+        );
 
         await configuration.slashCommands.provideSlashCommand(
             new GsocLeaderboard(this)

@@ -45,9 +45,14 @@ export class GsocLeaderboard implements ISlashCommand {
             .getSettings()
             .getValueById("admin-password");
 
+        const domain = await read
+            .getEnvironmentReader()
+            .getSettings()
+            .getValueById("domain");
+
         if (subcommand) {
             try {
-                const r = await http.post("http://0.0.0.0:8080/api/add", {
+                const r = await http.post(`${domain}/api/add`, {
                     headers: {
                         Accept: "application/json",
                         "Content-Type": "application/json",
