@@ -1,6 +1,8 @@
 import {
     IAppAccessors,
     IConfigurationExtend,
+    IConfigurationModify,
+    IEnvironmentRead,
     IHttp,
     ILogger,
     IModify,
@@ -13,6 +15,8 @@ import {
     IPostRoomUserJoined,
     IRoomUserJoinedContext,
 } from "@rocket.chat/apps-engine/definition/rooms";
+import { ISetting } from "@rocket.chat/apps-engine/definition/settings";
+import { settings } from "./config/Setting";
 import { GsocLeaderboard } from "./GsocLeaderboard";
 
 export class GsocLeaderboardApp extends App implements IPostRoomUserJoined {
@@ -20,9 +24,23 @@ export class GsocLeaderboardApp extends App implements IPostRoomUserJoined {
         super(info, logger, accessors);
     }
 
+    public async onSettingUpdated(
+        setting: ISetting,
+        configurationModify: IConfigurationModify,
+        read: IRead,
+        http: IHttp
+    ): Promise<void> {
+        const pass = await read
+            .getEnvironmentReader()
+            .getSettings()
+            .getValueById("admin-password");
+    }
+
     protected async extendConfiguration(
         configuration: IConfigurationExtend
     ): Promise<void> {
+        await configuration.settings.provideSetting(settings);
+
         await configuration.slashCommands.provideSlashCommand(
             new GsocLeaderboard(this)
         );

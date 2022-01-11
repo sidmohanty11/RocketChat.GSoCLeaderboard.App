@@ -40,7 +40,10 @@ export class GsocLeaderboard implements ISlashCommand {
         }
 
         // password of admin
-        const token = "sidharth";
+        const token = await read
+            .getEnvironmentReader()
+            .getSettings()
+            .getValueById("admin-password");
 
         if (subcommand) {
             try {
